@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}CSV Dataset Upload | Agricultural Crop Production Analysis System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h4 class="fw-bold mb-0 text-dark">
+                    <i class="bi bi-cloud-arrow-up text-success me-2"></i>Batch CSV Dataset Ingestion
+                </h4>
+                <a href="{{ url_for('upload.download_template') }}" class="btn btn-sm btn-outline-success">
+                    <i class="bi bi-file-earmark-arrow-down me-1"></i> Download Standard CSV Template
+                </a>
+            </div>
+            <div class="card-body p-4">
+                <p class="text-muted">
+                    Upload agricultural datasets in bulk. The validation engine checks for required headers,
+                    numeric formatting, negative values, and duplicate records before safely importing within a database transaction.
+                </p>
+
+                <form method="POST" action="{{ url_for('upload.upload_dataset') }}" enctype="multipart/form-data">
+                    <div class="upload-dropzone mb-4" onclick="document.getElementById('csvFileInput').click()">
+                        <i class="bi bi-filetype-csv text-success display-3 d-block mb-3"></i>
+                        <h5 class="fw-bold mb-1">Click to select or drop your CSV file here</h5>
+                        <p class="text-muted small mb-3">Maximum file size: 5MB (.csv only)</p>
+                        <input type="file" id="csvFileInput" name="file" accept=".csv" class="d-none" required>
+                        <div id="fileChosenLabel" class="text-muted small">No file chosen yet</div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i> Return to Dashboard
+                        </a>
+                        <button type="submit" class="btn btn-success px-4">
+                            <i class="bi bi-shield-check me-1"></i> Validate & Parse File
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- CSV Specification Guidelines Card -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-white fw-bold">
+                <i class="bi bi-journal-text text-primary me-2"></i>Dataset Specification & Validation Rules
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Column Header</th>
+                                <th>Required?</th>
+                                <th>Data Type</th>
+                                <th>Validation Rules & Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>crop_name</code></td>
+                                <td><span class="badge bg-danger">Required</span></td>
+                                <td>Text</td>
+                                <td>Name of the crop (e.g. Wheat, Rice, Cotton).</td>
+                            </tr>
+                            <tr>
+                                <td><code>region_name</code></td>
+                                <td><span class="badge bg-danger">Required</span></td>
+                                <td>Text</td>
+                                <td>Geographic territory (e.g. Punjab, Maharashtra).</td>
+                            </tr>
+                            <tr>
+                                <td><code>year</code></td>
+                                <td><span class="badge bg-danger">Required</span></td>
+                                <td>Integer</td>
+                                <td>Harvest year between 1900 and 2100.</td>
+                            </tr>
+                            <tr>
+                                <td><code>area_cultivated</code></td>
+                                <td><span class="badge bg-danger">Required</span></td>
+                                <td>Float</td>
+                                <td>Must be strictly positive (&gt; 0).</td>
+                            </tr>
+                            <tr>
+                                <td><code>production_quantity</code></td>
+                                <td><span class="badge bg-danger">Required</span></td>
+                                <td>Float</td>
+                                <td>Cannot be negative (&ge; 0).</td>
+                            </tr>
+                            <tr>
+                                <td><code>annual_rainfall</code></td>
+                                <td><span class="badge bg-secondary">Optional</span></td>
+                                <td>Float / Null</td>
+                                <td>Rainfall in mm (&ge; 0). Leave blank if unrecorded.</td>
+                            </tr>
+                            <tr>
+                                <td><code>area_unit</code></td>
+                                <td><span class="badge bg-secondary">Optional</span></td>
+                                <td>Text</td>
+                                <td>Defaults to "Hectares".</td>
+                            </tr>
+                            <tr>
+                                <td><code>production_unit</code></td>
+                                <td><span class="badge bg-secondary">Optional</span></td>
+                                <td>Text</td>
+                                <td>Defaults to "Metric Tonnes".</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

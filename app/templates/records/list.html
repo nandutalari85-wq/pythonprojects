@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Crop Production Records | Agricultural Crop Production Analysis System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1 text-dark">
+            <i class="bi bi-table text-success me-2"></i>Crop Production Records
+        </h2>
+        <p class="text-muted mb-0">Browse, filter, edit, and manage granular agricultural observation records.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('upload.upload_dataset') }}" class="btn btn-outline-success">
+            <i class="bi bi-cloud-arrow-up me-1"></i> Upload CSV
+        </a>
+        <a href="{{ url_for('main.record_add') }}" class="btn btn-success">
+            <i class="bi bi-plus-circle me-1"></i> Add Record
+        </a>
+    </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="card filter-card mb-4 shadow-sm">
+    <form method="GET" action="{{ url_for('main.records_list') }}" class="row g-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Crop</label>
+            <select name="crop_id" class="form-select form-select-sm">
+                <option value="">-- All Crops --</option>
+                {% for c in crops %}
+                    <option value="{{ c.id }}" {% if selected_crop_id == c.id %}selected{% endif %}>{{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Region</label>
+            <select name="region_id" class="form-select form-select-sm">
+                <option value="">-- All Regions --</option>
+                {% for r in regions %}
+                    <option value="{{ r.id }}" {% if selected_region_id == r.id %}selected{% endif %}>{{ r.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Year</label>
+            <select name="year" class="form-select form-select-sm">
+                <option value="">-- All Years --</option>
+                {% for y in years %}
+                    <option value="{{ y }}" {% if selected_year == y %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-sm btn-success flex-grow-1">
+                <i class="bi bi-funnel-fill me-1"></i> Filter
+            </button>
+            <a href="{{ url_for('main.records_list') }}" class="btn btn-sm btn-outline-secondary" title="Clear Filters">
+                <i class="bi bi-arrow-counterclockwise"></i> Reset
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Records Data Table -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-semibold">Showing {{ pagination.total }} Registered Observations</span>
+        <span class="text-muted small">Page {{ pagination.page }} of {{ pagination.pages or 1 }}</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Crop Name</th>
+                    <th>Region / State</th>
+                    <th>Year</th>
+                    <th class="text-end">Cultivated Area</th>
+                    <th class="text-end">Production</th>
+                    <th class="text-end">Yield (T/Ha)</th>
+                    <th class="text-end">Annual Rainfall</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                    <tr>
+                        <td class="text-muted small">{{ record.id }}</td>
+                        <td>
+                            <div class="fw-semibold text-dark">{{ record.crop.name }}</div>
+                            <span class="badge badge-cereal small">{{ record.crop.category }}</span>
+                        </td>
+                        <td>
+                            <div>{{ record.region.name }}</div>
+                            <small class="text-muted">{{ record.region.state }}</small>
+                        </td>
+                        <td><span class="badge bg-light text-dark border">{{ record.year }}</span></td>
+                        <td class="text-end">{{ record.area_cultivated|number_format }} {{ record.area_unit }}</td>
+                        <td class="text-end fw-bold text-success">{{ record.production_quantity|number_format }} {{ record.production_unit }}</td>
+                        <td class="text-end fw-semibold text-info">
+                            {% if record.yield_per_hectare is not none %}
+                                {{ record.yield_per_hectare }}
+                            {% else %}
+                                <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            {% if record.annual_rainfall is not none %}
+                                {{ record.annual_rainfall }} mm
+                            {% else %}
+                                <span class="badge bg-light text-muted border">Missing</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url_for('main.record_detail', record_id=record.id) }}" class="btn btn-outline-secondary" title="View Detail">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{{ url_for('main.record_edit', record_id=record.id) }}" class="btn btn-outline-primary" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ record.id }}" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+
+                            <!-- Delete Confirmation Modal -->
+                            <div class="modal fade" id="deleteModal{{ record.id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirm Deletion</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-start">
+                                            Are you sure you want to delete the production record for 
+                                            <strong>{{ record.crop.name }}</strong> in <strong>{{ record.region.name }}</strong> for year <strong>{{ record.year }}</strong>?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                                            <form method="POST" action="{{ url_for('main.record_delete', record_id=record.id) }}">
+                                                <button type="submit" class="btn btn-danger btn-sm">Yes, Delete Record</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="9" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                            No crop production records match your selection criteria.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    {% if pagination.pages > 1 %}
+        <div class="card-footer bg-white d-flex justify-content-between align-items-center py-3">
+            <span class="small text-muted">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+            <nav aria-label="Records pagination">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('main.records_list', page=pagination.prev_num, crop_id=selected_crop_id, region_id=selected_region_id, year=selected_year) }}">Previous</a>
+                    </li>
+                    {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                        {% if p %}
+                            <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                                <a class="page-link" href="{{ url_for('main.records_list', page=p, crop_id=selected_crop_id, region_id=selected_region_id, year=selected_year) }}">{{ p }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                        {% endif %}
+                    {% endfor %}
+                    <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                        <a class="page-link" href="{{ url_for('main.records_list', page=pagination.next_num, crop_id=selected_crop_id, region_id=selected_region_id, year=selected_year) }}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+# =========================================================================================
+# SYNTHETIC DATASET FOR ACADEMIC DEMONSTRATION ONLY - NOT OFFICIAL AGRICULTURAL STATISTICS
+# System: Agricultural Crop Production Analysis System (College AIML Capstone Project)
+# =========================================================================================
+crop_name,crop_category,region_name,state,year,area_cultivated,area_unit,production_quantity,production_unit,annual_rainfall,notes
+Wheat,Cereal,Punjab,Punjab,2019,3500.0,Hectares,16800.0,Metric Tonnes,610.5,Adequate canal irrigation
+Rice,Cereal,Punjab,Punjab,2019,3100.0,Hectares,12400.0,Metric Tonnes,650.0,Normal monsoon onset
+Maize,Cereal,Punjab,Punjab,2019,1200.0,Hectares,4560.0,Metric Tonnes,580.0,Kharif crop
+Cotton,Commercial,Punjab,Punjab,2019,1800.0,Hectares,3960.0,Metric Tonnes,,Rainfall data unrecorded
+Sugarcane,Commercial,Punjab,Punjab,2019,950.0,Hectares,76000.0,Metric Tonnes,620.0,High water table harvest
+Wheat,Cereal,Maharashtra,Maharashtra,2019,2200.0,Hectares,6600.0,Metric Tonnes,890.0,Rabi crop in Vidarbha
+Rice,Cereal,Maharashtra,Maharashtra,2019,3800.0,Hectares,11400.0,Metric Tonnes,1250.5,Konkan coastal belt
+Maize,Cereal,Maharashtra,Maharashtra,2019,1900.0,Hectares,6270.0,Metric Tonnes,,Rainfall sensor maintenance
+Cotton,Commercial,Maharashtra,Maharashtra,2019,3200.0,Hectares,6400.0,Metric Tonnes,920.0,Black cotton soil tract
+Sugarcane,Commercial,Maharashtra,Maharashtra,2019,1600.0,Hectares,136000.0,Metric Tonnes,1100.0,Western Maharashtra cooperative
+Wheat,Cereal,Karnataka,Karnataka,2019,1400.0,Hectares,3920.0,Metric Tonnes,750.0,Northern dry zone
+Rice,Cereal,Karnataka,Karnataka,2019,2900.0,Hectares,9860.0,Metric Tonnes,1180.0,Tunga-Bhadra basin
+Maize,Cereal,Karnataka,Karnataka,2019,2100.0,Hectares,7770.0,Metric Tonnes,810.0,Davangere grain belt
+Cotton,Commercial,Karnataka,Karnataka,2019,1650.0,Hectares,3300.0,Metric Tonnes,730.0,Dharwad hybrid cotton
+Sugarcane,Commercial,Karnataka,Karnataka,2019,1200.0,Hectares,98400.0,Metric Tonnes,,Missing meteorological record
+Wheat,Cereal,Punjab,Punjab,2020,3550.0,Hectares,17395.0,Metric Tonnes,590.0,Favorable cold spell
+Rice,Cereal,Punjab,Punjab,2020,3150.0,Hectares,12915.0,Metric Tonnes,640.0,Direct seeded rice trials
+Maize,Cereal,Punjab,Punjab,2020,1250.0,Hectares,4875.0,Metric Tonnes,,Gauges missed in zone
+Cotton,Commercial,Punjab,Punjab,2020,1750.0,Hectares,3675.0,Metric Tonnes,560.0,Mild whitefly impact
+Sugarcane,Commercial,Punjab,Punjab,2020,980.0,Hectares,79380.0,Metric Tonnes,610.0,Good ratoon crop
+Wheat,Cereal,Maharashtra,Maharashtra,2020,2300.0,Hectares,7130.0,Metric Tonnes,960.0,Abundant post-monsoon dew
+Rice,Cereal,Maharashtra,Maharashtra,2020,3850.0,Hectares,12320.0,Metric Tonnes,1320.0,Heavy monsoon showers
+Maize,Cereal,Maharashtra,Maharashtra,2020,2000.0,Hectares,6800.0,Metric Tonnes,940.0,Marathwada harvest
+Cotton,Commercial,Maharashtra,Maharashtra,2020,3300.0,Hectares,6930.0,Metric Tonnes,980.0,Extended picking cycle
+Sugarcane,Commercial,Maharashtra,Maharashtra,2020,1650.0,Hectares,143550.0,Metric Tonnes,1150.0,Kolhapur bumper yield
+Wheat,Cereal,Karnataka,Karnataka,2020,1450.0,Hectares,4205.0,Metric Tonnes,780.0,Belagavi plateau
+Rice,Cereal,Karnataka,Karnataka,2020,2950.0,Hectares,10325.0,Metric Tonnes,1240.0,Cauvery delta support
+Maize,Cereal,Karnataka,Karnataka,2020,2200.0,Hectares,8360.0,Metric Tonnes,,Station offline
+Cotton,Commercial,Karnataka,Karnataka,2020,1700.0,Hectares,3570.0,Metric Tonnes,760.0,Raichur black soil
+Sugarcane,Commercial,Karnataka,Karnataka,2020,1250.0,Hectares,105000.0,Metric Tonnes,1020.0,Mandya sugarcane corridor
+Wheat,Cereal,Punjab,Punjab,2021,3600.0,Hectares,18000.0,Metric Tonnes,570.0,High yielding variety PBW
+Rice,Cereal,Punjab,Punjab,2021,3200.0,Hectares,13440.0,Metric Tonnes,680.0,Basmati export share
+Maize,Cereal,Punjab,Punjab,2021,1300.0,Hectares,5330.0,Metric Tonnes,590.0,Diversified grain production
+Cotton,Commercial,Punjab,Punjab,2021,1700.0,Hectares,3400.0,Metric Tonnes,550.0,Pink bollworm alert
+Sugarcane,Commercial,Punjab,Punjab,2021,1000.0,Hectares,82000.0,Metric Tonnes,630.0,Stable mill crushing
+Wheat,Cereal,Maharashtra,Maharashtra,2021,2350.0,Hectares,7520.0,Metric Tonnes,1020.0,Good reservoir storage
+Rice,Cereal,Maharashtra,Maharashtra,2021,3900.0,Hectares,12870.0,Metric Tonnes,1400.0,Substantial precipitation
+Maize,Cereal,Maharashtra,Maharashtra,2021,2050.0,Hectares,7380.0,Metric Tonnes,990.0,Poultry feed demand
+Cotton,Commercial,Maharashtra,Maharashtra,2021,3400.0,Hectares,7480.0,Metric Tonnes,,Station gauge broken
+Sugarcane,Commercial,Maharashtra,Maharashtra,2021,1700.0,Hectares,151300.0,Metric Tonnes,1210.0,High sugar recovery
+Wheat,Cereal,Karnataka,Karnataka,2021,1500.0,Hectares,4500.0,Metric Tonnes,810.0,Bagalkot irrigated sector
+Rice,Cereal,Karnataka,Karnataka,2021,3000.0,Hectares,10800.0,Metric Tonnes,1290.0,Shimoga malnad belt
+Maize,Cereal,Karnataka,Karnataka,2021,2300.0,Hectares,9200.0,Metric Tonnes,840.0,Hybrid seed dominance
+Cotton,Commercial,Karnataka,Karnataka,2021,1750.0,Hectares,3850.0,Metric Tonnes,790.0,Ballari district
+Sugarcane,Commercial,Karnataka,Karnataka,2021,1300.0,Hectares,111800.0,Metric Tonnes,1060.0,Kaveri basin mills
+Wheat,Cereal,Punjab,Punjab,2022,3650.0,Hectares,17885.0,Metric Tonnes,540.0,Early March heatwave
+Rice,Cereal,Punjab,Punjab,2022,3220.0,Hectares,13846.0,Metric Tonnes,660.0,Stable water pump delivery
+Maize,Cereal,Punjab,Punjab,2022,1320.0,Hectares,5544.0,Metric Tonnes,570.0,Spring maize crop
+Cotton,Commercial,Punjab,Punjab,2022,1650.0,Hectares,3135.0,Metric Tonnes,,Sensor outage
+Sugarcane,Commercial,Punjab,Punjab,2022,1020.0,Hectares,84660.0,Metric Tonnes,600.0,High recovery variety Co-0238
+Wheat,Cereal,Maharashtra,Maharashtra,2022,2400.0,Hectares,7440.0,Metric Tonnes,910.0,Dry spell in February
+Rice,Cereal,Maharashtra,Maharashtra,2022,3950.0,Hectares,13035.0,Metric Tonnes,1280.0,Moderate monsoon phase
+Maize,Cereal,Maharashtra,Maharashtra,2022,2100.0,Hectares,7560.0,Metric Tonnes,920.0,Steady regional pricing
+Cotton,Commercial,Maharashtra,Maharashtra,2022,3450.0,Hectares,7245.0,Metric Tonnes,930.0,Bt cotton cultivation
+Sugarcane,Commercial,Maharashtra,Maharashtra,2022,1750.0,Hectares,154000.0,Metric Tonnes,1170.0,Drip irrigation expansion
+Wheat,Cereal,Karnataka,Karnataka,2022,1520.0,Hectares,4408.0,Metric Tonnes,760.0,Koppal district
+Rice,Cereal,Karnataka,Karnataka,2022,3050.0,Hectares,10980.0,Metric Tonnes,1220.0,Krishna basin water release
+Maize,Cereal,Karnataka,Karnataka,2022,2350.0,Hectares,9165.0,Metric Tonnes,800.0,Fodder and grain utility
+Cotton,Commercial,Karnataka,Karnataka,2022,1800.0,Hectares,3780.0,Metric Tonnes,750.0,Haveri market yard
+Sugarcane,Commercial,Karnataka,Karnataka,2022,1320.0,Hectares,112200.0,Metric Tonnes,,Meteorology station offline
+Wheat,Cereal,Punjab,Punjab,2023,3700.0,Hectares,18870.0,Metric Tonnes,620.0,Excellent cold climate winter
+Rice,Cereal,Punjab,Punjab,2023,3250.0,Hectares,14300.0,Metric Tonnes,710.0,Peak summer sowing
+Maize,Cereal,Punjab,Punjab,2023,1350.0,Hectares,5805.0,Metric Tonnes,600.0,Intercropped fields
+Cotton,Commercial,Punjab,Punjab,2023,1680.0,Hectares,3528.0,Metric Tonnes,580.0,Controlled pest management
+Sugarcane,Commercial,Punjab,Punjab,2023,1050.0,Hectares,88200.0,Metric Tonnes,640.0,State highest cane yield
+Wheat,Cereal,Maharashtra,Maharashtra,2023,2450.0,Hectares,8085.0,Metric Tonnes,970.0,Nashik farm clusters
+Rice,Cereal,Maharashtra,Maharashtra,2023,4000.0,Hectares,13600.0,Metric Tonnes,1340.0,Heavy coastal monsoon
+Maize,Cereal,Maharashtra,Maharashtra,2023,2150.0,Hectares,8170.0,Metric Tonnes,960.0,Starch manufacturing sales
+Cotton,Commercial,Maharashtra,Maharashtra,2023,3500.0,Hectares,7700.0,Metric Tonnes,990.0,Nagpur textile belt
+Sugarcane,Commercial,Maharashtra,Maharashtra,2023,1800.0,Hectares,162000.0,Metric Tonnes,1230.0,Record crushing season
+Wheat,Cereal,Karnataka,Karnataka,2023,1550.0,Hectares,4805.0,Metric Tonnes,830.0,Vijayapura black soil
+Rice,Cereal,Karnataka,Karnataka,2023,3100.0,Hectares,11470.0,Metric Tonnes,1310.0,Bhadra canal supply
+Maize,Cereal,Karnataka,Karnataka,2023,2400.0,Hectares,9840.0,Metric Tonnes,860.0,High productivity hybrid
+Cotton,Commercial,Karnataka,Karnataka,2023,1850.0,Hectares,4070.0,Metric Tonnes,800.0,Gadag market
+Sugarcane,Commercial,Karnataka,Karnataka,2023,1350.0,Hectares,117450.0,Metric Tonnes,1090.0,Belagavi sugar mills

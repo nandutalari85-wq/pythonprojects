@@ -1,0 +1,17 @@
+# =========================================================================================
+# INVALID TEST DATASET FOR DEMONSTRATING CSV VALIDATION & REJECTION HANDLING
+# Contains deliberate errors: missing values, negative areas, negative productions, duplicates
+# =========================================================================================
+crop_name,crop_category,region_name,state,year,area_cultivated,area_unit,production_quantity,production_unit,annual_rainfall,notes
+Wheat,Cereal,Punjab,Punjab,2023,3500.0,Hectares,18000.0,Metric Tonnes,600.0,Valid Row for testing
+,Cereal,Punjab,Punjab,2023,2000.0,Hectares,8000.0,Metric Tonnes,550.0,Missing crop name
+Rice,Cereal,,Maharashtra,2023,1500.0,Hectares,6000.0,Metric Tonnes,1100.0,Missing region name
+Maize,Cereal,Karnataka,Karnataka,invalid_year,1200.0,Hectares,4500.0,Metric Tonnes,800.0,Invalid non-numeric year
+Cotton,Commercial,Maharashtra,Maharashtra,2023,-500.0,Hectares,1500.0,Metric Tonnes,900.0,Negative cultivated area
+Sugarcane,Commercial,Punjab,Punjab,2023,800.0,Hectares,-25000.0,Metric Tonnes,650.0,Negative production quantity
+Wheat,Cereal,Punjab,Punjab,1850,2000.0,Hectares,8000.0,Metric Tonnes,600.0,Year out of realistic range
+Rice,Cereal,Karnataka,Karnataka,2023,2500.0,Hectares,10000.0,Metric Tonnes,-120.0,Negative annual rainfall
+Wheat,Cereal,Punjab,Punjab,2023,3500.0,Hectares,18000.0,Metric Tonnes,600.0,Duplicate row within same file
+Maize,Cereal,Punjab,Punjab,2023,abc,Hectares,4000.0,Metric Tonnes,550.0,Non-numeric cultivated area
+Cotton,Commercial,Karnataka,Karnataka,2023,1600.0,Hectares,not_a_number,Metric Tonnes,700.0,Non-numeric production quantity
+Barley,Cereal,Punjab,Punjab,2023,1200.0,Hectares,4200.0,Metric Tonnes,590.0,Valid second row

@@ -1,0 +1,3 @@
+crop_name,crop_category,region_name,state,year,area_cultivated,area_unit,production_quantity,production_unit,annual_rainfall,notes
+Wheat,Cereal,Punjab,Punjab,2023,3500.0,Hectares,17500.0,Metric Tonnes,620.5,Optimal winter monsoon
+Rice,Cereal,Maharashtra,Maharashtra,2023,2800.0,Hectares,9800.0,Metric Tonnes,1150.0,Good kharif harvest

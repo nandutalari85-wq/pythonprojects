@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Validation Results | Agricultural Crop Production Analysis System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1 text-dark">
+            <i class="bi bi-file-earmark-check text-success me-2"></i>Dataset Ingestion Validation Report
+        </h2>
+        <p class="text-muted mb-0">File processed: <strong>{{ filename }}</strong> ({{ total_rows }} total rows analyzed)</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('upload.upload_dataset') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Upload Another File
+        </a>
+    </div>
+</div>
+
+<!-- Summary Status Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card p-3 border-start border-4 border-info shadow-sm">
+            <div class="small text-muted text-uppercase fw-semibold">Total Rows Evaluated</div>
+            <div class="fs-2 fw-bold text-dark">{{ total_rows }}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 border-start border-4 border-success shadow-sm">
+            <div class="small text-muted text-uppercase fw-semibold">Valid Rows Accepted</div>
+            <div class="fs-2 fw-bold text-success">{{ accepted_rows|length }}</div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 border-start border-4 border-danger shadow-sm">
+            <div class="small text-muted text-uppercase fw-semibold">Invalid Rows Rejected</div>
+            <div class="fs-2 fw-bold text-danger">{{ rejected_rows|length }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Banner for Committing Valid Rows -->
+{% if accepted_rows %}
+    <div class="alert alert-success d-flex justify-content-between align-items-center shadow-sm mb-4">
+        <div>
+            <h5 class="fw-bold mb-1"><i class="bi bi-check-circle-fill me-2"></i>{{ accepted_rows|length }} Valid Rows Ready to Import</h5>
+            <div class="small">The database will execute an atomic transaction. Regions and Crops will be mapped automatically.</div>
+        </div>
+        <form method="POST" action="{{ url_for('upload.confirm_import') }}">
+            <button type="submit" class="btn btn-success fw-semibold px-4">
+                <i class="bi bi-database-add me-1"></i> Confirm & Import Valid Rows
+            </button>
+        </form>
+    </div>
+{% else %}
+    <div class="alert alert-warning shadow-sm mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <strong>No valid rows detected!</strong> All rows contained validation errors. Please review the reasons below, correct the CSV, and re-upload.
+    </div>
+{% endif %}
+
+<!-- Rejected Rows Table -->
+{% if rejected_rows %}
+    <div class="card shadow-sm mb-4 border-danger">
+        <div class="card-header bg-danger-subtle text-danger fw-bold d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-x-circle-fill me-2"></i>Rejected Rows with Diagnostic Failure Reasons ({{ rejected_rows|length }})</span>
+            <span class="badge bg-danger">Not Imported</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>CSV Row</th>
+                        <th>Crop</th>
+                        <th>Region</th>
+                        <th>Year</th>
+                        <th>Area</th>
+                        <th>Production</th>
+                        <th>Rainfall</th>
+                        <th>Rejection Reason(s)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rejected_rows %}
+                        <tr class="table-danger-subtle">
+                            <td class="fw-bold">Line {{ row.row_number }}</td>
+                            <td>{{ row.crop_name or "<empty>" }}</td>
+                            <td>{{ row.region_name or "<empty>" }}</td>
+                            <td>{{ row.year or "<empty>" }}</td>
+                            <td>{{ row.area_cultivated if row.area_cultivated is not none else "<empty>" }}</td>
+                            <td>{{ row.production_quantity if row.production_quantity is not none else "<empty>" }}</td>
+                            <td>{{ row.annual_rainfall if row.annual_rainfall is not none else "--" }}</td>
+                            <td>
+                                <ul class="list-unstyled mb-0 small text-danger fw-semibold">
+                                    {% for err in row.errors %}
+                                        <li><i class="bi bi-exclamation-octagon me-1"></i>{{ err }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Accepted Rows Preview Table -->
+{% if accepted_rows %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-check-circle text-success me-2"></i>Accepted Rows Preview ({{ accepted_rows|length }})</span>
+            <span class="badge bg-success-subtle text-success">Passed All Quality Checks</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>CSV Row</th>
+                        <th>Crop</th>
+                        <th>Region</th>
+                        <th>Year</th>
+                        <th class="text-end">Area</th>
+                        <th class="text-end">Production</th>
+                        <th class="text-end">Rainfall</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in accepted_rows[:25] %}
+                        <tr>
+                            <td class="text-muted small">Line {{ row.row_number }}</td>
+                            <td class="fw-semibold text-dark">{{ row.crop_name }}</td>
+                            <td>{{ row.region_name }}</td>
+                            <td><span class="badge bg-light text-dark border">{{ row.year }}</span></td>
+                            <td class="text-end">{{ row.area_cultivated|number_format }} {{ row.area_unit }}</td>
+                            <td class="text-end fw-bold text-success">{{ row.production_quantity|number_format }} {{ row.production_unit }}</td>
+                            <td class="text-end">
+                                {% if row.annual_rainfall is not none %}
+                                    {{ row.annual_rainfall }} mm
+                                {% else %}
+                                    <span class="text-muted small">Missing</span>
+                                {% endif %}
+                            </td>
+                            <td class="small text-muted">{{ row.notes or "--" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if accepted_rows|length > 25 %}
+            <div class="card-footer bg-white text-muted small text-center">
+                Showing first 25 accepted rows of {{ accepted_rows|length }} total valid rows.
+            </div>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

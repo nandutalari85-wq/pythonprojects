@@ -1,0 +1,418 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Agricultural Crop Production Analysis System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1 text-dark">
+            <i class="bi bi-speedometer2 text-success me-2"></i>Crop Production Dashboard
+        </h2>
+        <p class="text-muted mb-0">Multivariate analysis of agricultural yield, regional distribution, and climatic trends.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{{ url_for('upload.upload_dataset') }}" class="btn btn-outline-success">
+            <i class="bi bi-cloud-arrow-up me-1"></i> Upload Dataset
+        </a>
+        <a href="{{ url_for('main.record_add') }}" class="btn btn-success">
+            <i class="bi bi-plus-circle me-1"></i> Add Record
+        </a>
+    </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="card filter-card mb-4 shadow-sm">
+    <form method="GET" action="{{ url_for('main.dashboard') }}" class="row g-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Crop Filter</label>
+            <select name="crop_id" class="form-select form-select-sm">
+                <option value="">-- All Crops --</option>
+                {% for crop in crops %}
+                    <option value="{{ crop.id }}" {% if selected_crop_id == crop.id %}selected{% endif %}>
+                        {{ crop.name }} ({{ crop.category }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Region Filter</label>
+            <select name="region_id" class="form-select form-select-sm">
+                <option value="">-- All Regions --</option>
+                {% for region in regions %}
+                    <option value="{{ region.id }}" {% if selected_region_id == region.id %}selected{% endif %}>
+                        {{ region.name }} ({{ region.state }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-semibold text-secondary small text-uppercase">Year Filter</label>
+            <select name="year" class="form-select form-select-sm">
+                <option value="">-- All Years --</option>
+                {% for y in years %}
+                    <option value="{{ y }}" {% if selected_year == y %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-sm btn-success flex-grow-1">
+                <i class="bi bi-funnel-fill me-1"></i> Apply Filters
+            </button>
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-sm btn-outline-secondary" title="Reset Filters">
+                <i class="bi bi-arrow-counterclockwise"></i> Reset
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- KPI Metrics Grid -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4 col-xl-2">
+        <div class="card kpi-card p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="kpi-title">Total Records</div>
+                    <div class="kpi-value">{{ kpis.total_records }}</div>
+                </div>
+                <div class="kpi-icon bg-success-subtle text-success">
+                    <i class="bi bi-database-check"></i>
+                </div>
+            </div>
+            <div class="small text-muted mt-2">Active observations</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-xl-2">
+        <div class="card kpi-card p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="kpi-title">Crops Tracked</div>
+                    <div class="kpi-value">{{ kpis.total_crops }}</div>
+                </div>
+                <div class="kpi-icon bg-primary-subtle text-primary">
+                    <i class="bi bi-tree-fill"></i>
+                </div>
+            </div>
+            <div class="small text-muted mt-2">Distinct commodities</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-xl-2">
+        <div class="card kpi-card p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="kpi-title">Regions Covered</div>
+                    <div class="kpi-value">{{ kpis.total_regions }}</div>
+                </div>
+                <div class="kpi-icon bg-warning-subtle text-warning">
+                    <i class="bi bi-geo-alt-fill"></i>
+                </div>
+            </div>
+            <div class="small text-muted mt-2">Geographic zones</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-xl-2">
+        <div class="card kpi-card p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="kpi-title">Temporal Range</div>
+                    <div class="kpi-value fs-5">{{ kpis.year_range_str }}</div>
+                </div>
+                <div class="kpi-icon bg-info-subtle text-info">
+                    <i class="bi bi-calendar3"></i>
+                </div>
+            </div>
+            <div class="small text-muted mt-2">Observed period</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-xl-2">
+        <div class="card kpi-card p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="kpi-title">Total Production</div>
+                    <div class="kpi-value fs-4">{{ kpis.total_production|number_format }}</div>
+                </div>
+                <div class="kpi-icon bg-danger-subtle text-danger">
+                    <i class="bi bi-pie-chart-fill"></i>
+                </div>
+            </div>
+            <div class="small text-muted mt-2">
+                {{ kpis.production_unit }}
+                {% if kpis.has_incompatible_units %}
+                    <span class="badge bg-warning text-dark ms-1" title="Dataset contains mixed units; aggregated only matching units">Mixed Units</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-xl-2">
+        <div class="card kpi-card p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="kpi-title">Average Yield</div>
+                    <div class="kpi-value fs-4">{{ kpis.average_yield }}</div>
+                </div>
+                <div class="kpi-icon bg-success-subtle text-success">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+            </div>
+            <div class="small text-muted mt-2">Tonnes / Hectare</div>
+        </div>
+    </div>
+</div>
+
+<!-- Visual Analytics Grid: 4 Matplotlib Charts -->
+<h4 class="fw-bold mb-3 text-dark">
+    <i class="bi bi-bar-chart-line text-success me-2"></i>Visual Analytics & Trend Visualizations
+</h4>
+
+<div class="row g-4 mb-4">
+    <!-- Chart 1: Annual Trend -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-graph-up text-success me-2"></i>Annual Production Trend</span>
+                <a href="{{ url_for('main.download_chart', filename='trend_chart.png') }}" class="btn btn-sm btn-outline-success">
+                    <i class="bi bi-download me-1"></i> Download Chart
+                </a>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center p-3">
+                <img src="{{ url_for('static', filename='charts/trend_chart.png') }}" alt="Annual Production Trend" class="img-fluid rounded border">
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 2: Regional Comparison -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-bar-chart-fill text-primary me-2"></i>Regional Production Comparison</span>
+                <a href="{{ url_for('main.download_chart', filename='region_chart.png') }}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-download me-1"></i> Download Chart
+                </a>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center p-3">
+                <img src="{{ url_for('static', filename='charts/region_chart.png') }}" alt="Regional Production Comparison" class="img-fluid rounded border">
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 3: Crop-wise Yield -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-speedometer text-info me-2"></i>Crop-wise Productivity (Yield per Hectare)</span>
+                <a href="{{ url_for('main.download_chart', filename='yield_chart.png') }}" class="btn btn-sm btn-outline-info">
+                    <i class="bi bi-download me-1"></i> Download Chart
+                </a>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center p-3">
+                <img src="{{ url_for('static', filename='charts/yield_chart.png') }}" alt="Crop Yield Comparison" class="img-fluid rounded border">
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 4: Rainfall vs Production Scatter -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-cloud-rain-fill text-danger me-2"></i>Rainfall vs. Production Scatter Analysis</span>
+                <a href="{{ url_for('main.download_chart', filename='rainfall_chart.png') }}" class="btn btn-sm btn-outline-danger">
+                    <i class="bi bi-download me-1"></i> Download Chart
+                </a>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center p-3">
+                <img src="{{ url_for('static', filename='charts/rainfall_chart.png') }}" alt="Rainfall vs Production Scatter" class="img-fluid rounded border">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabular Analysis Section -->
+<div class="row g-4 mb-4">
+    <!-- Crop Performance Table -->
+    <div class="col-lg-7">
+        <div class="card shadow-sm h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span class="fw-semibold"><i class="bi bi-table text-success me-2"></i>Crop-wise Summary & Productivity</span>
+                <span class="badge bg-success-subtle text-success">{{ crop_summary|length }} Crops</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Crop</th>
+                            <th class="text-end">Records</th>
+                            <th class="text-end">Total Output</th>
+                            <th class="text-end">Avg Output</th>
+                            <th class="text-end">Min / Max</th>
+                            <th class="text-end">Yield (T/Ha)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in crop_summary %}
+                            <tr>
+                                <td class="fw-semibold text-dark">{{ row.crop_name }}</td>
+                                <td class="text-end"><span class="badge bg-secondary-subtle text-secondary">{{ row.record_count }}</span></td>
+                                <td class="text-end fw-bold text-success">{{ row.total_production|number_format }}</td>
+                                <td class="text-end">{{ row.avg_production|number_format }}</td>
+                                <td class="text-end text-muted small">{{ row.min_production|number_format }} - {{ row.max_production|number_format }}</td>
+                                <td class="text-end fw-semibold text-info">{{ row.avg_yield }}</td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="6" class="text-center py-4 text-muted">No crop records found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rainfall Correlation Analysis Card -->
+    <div class="col-lg-5">
+        <div class="card shadow-sm h-100">
+            <div class="card-header fw-semibold">
+                <i class="bi bi-droplet-half text-primary me-2"></i>Rainfall vs. Output Correlation Engine
+            </div>
+            <div class="card-body">
+                {% if rainfall_analysis.has_sufficient_data %}
+                    <div class="p-3 bg-light rounded mb-3 text-center">
+                        <div class="small text-uppercase fw-semibold text-muted">Pearson Correlation Coefficient (r)</div>
+                        <div class="display-6 fw-bold text-primary mt-1">{{ rainfall_analysis.correlation_coefficient }}</div>
+                        <span class="badge bg-primary-subtle text-primary mt-2 fs-6">
+                            {{ rainfall_analysis.correlation_strength }}
+                        </span>
+                        <div class="small text-muted mt-2">Paired observations: {{ rainfall_analysis.sample_size }}</div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning mb-3">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        {{ rainfall_analysis.correlation_strength }}
+                    </div>
+                {% endif %}
+
+                <div class="p-3 border rounded bg-white small">
+                    <h6 class="fw-bold text-secondary mb-1">
+                        <i class="bi bi-mortarboard-fill text-warning me-1"></i> Academic Note on Causality:
+                    </h6>
+                    <p class="text-muted mb-0">
+                        {{ rainfall_analysis.disclaimer }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Annual Trends Table (YoY Changes) -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-semibold"><i class="bi bi-calendar-range text-success me-2"></i>Annual Production Trends & Year-over-Year (YoY) Dynamics</span>
+        <span class="badge bg-info-subtle text-info">{{ annual_trends|length }} Years Recorded</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Year</th>
+                    <th class="text-end">Observations</th>
+                    <th class="text-end">Aggregate Production</th>
+                    <th class="text-end">YoY Absolute Change</th>
+                    <th class="text-end">YoY % Change</th>
+                    <th class="text-end">Average Yield (T/Ha)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in annual_trends %}
+                    <tr>
+                        <td class="fw-bold">{{ row.year }}</td>
+                        <td class="text-end">{{ row.record_count }}</td>
+                        <td class="text-end fw-semibold text-dark">{{ row.total_production|number_format }} MT</td>
+                        <td class="text-end">
+                            {% if row.abs_change > 0 %}
+                                <span class="text-success fw-semibold"><i class="bi bi-arrow-up-right me-1"></i>+{{ row.abs_change|number_format }} MT</span>
+                            {% elif row.abs_change < 0 %}
+                                <span class="text-danger fw-semibold"><i class="bi bi-arrow-down-right me-1"></i>{{ row.abs_change|number_format }} MT</span>
+                            {% else %}
+                                <span class="text-muted">--</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            {% if row.pct_change > 0 %}
+                                <span class="badge bg-success-subtle text-success fw-bold">+{{ row.pct_change }}%</span>
+                            {% elif row.pct_change < 0 %}
+                                <span class="badge bg-danger-subtle text-danger fw-bold">{{ row.pct_change }}%</span>
+                            {% else %}
+                                <span class="text-muted">--</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end fw-bold text-info">{{ row.avg_yield }}</td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6" class="text-center py-4 text-muted">No yearly trend data available.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Recent Records Quick View -->
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span class="fw-semibold"><i class="bi bi-clock-history text-secondary me-2"></i>Recent Observations (Latest 10)</span>
+        <a href="{{ url_for('main.records_list') }}" class="btn btn-sm btn-outline-success">
+            View All Records <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Crop</th>
+                    <th>Region</th>
+                    <th>Year</th>
+                    <th class="text-end">Cultivated Area</th>
+                    <th class="text-end">Production</th>
+                    <th class="text-end">Productivity (Yield)</th>
+                    <th class="text-end">Rainfall</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in recent_records %}
+                    <tr>
+                        <td class="text-muted small">#{{ r.id }}</td>
+                        <td class="fw-semibold text-dark">{{ r.crop.name }}</td>
+                        <td>{{ r.region.name }} ({{ r.region.state }})</td>
+                        <td><span class="badge bg-light text-dark border">{{ r.year }}</span></td>
+                        <td class="text-end">{{ r.area_cultivated|number_format }} {{ r.area_unit }}</td>
+                        <td class="text-end fw-bold text-success">{{ r.production_quantity|number_format }} {{ r.production_unit }}</td>
+                        <td class="text-end fw-semibold text-info">
+                            {% if r.yield_per_hectare is not none %}
+                                {{ r.yield_per_hectare }} T/Ha
+                            {% else %}
+                                <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            {% if r.annual_rainfall is not none %}
+                                {{ r.annual_rainfall }} mm
+                            {% else %}
+                                <span class="badge bg-light text-muted border">Missing</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ url_for('main.record_detail', record_id=r.id) }}" class="btn btn-sm btn-outline-secondary py-0 px-2" title="View details">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ url_for('main.record_edit', record_id=r.id) }}" class="btn btn-sm btn-outline-primary py-0 px-2" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="9" class="text-center py-4 text-muted">No records registered yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,161 @@
+/* ====================================================================
+   Agricultural Crop Production Analysis System - Custom CSS Styling
+   ==================================================================== */
+
+:root {
+    --agri-primary: #198754;
+    --agri-primary-dark: #146c43;
+    --agri-secondary: #0d6efd;
+    --agri-accent: #ffc107;
+    --agri-dark: #212529;
+    --agri-light: #f8f9fa;
+    --agri-card-bg: #ffffff;
+    --agri-border: #e9ecef;
+}
+
+body {
+    background-color: #f4f6f9;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #333333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.navbar-brand i {
+    color: #a3cfbb;
+}
+
+/* KPI Metric Cards */
+.kpi-card {
+    border: none;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.kpi-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+.kpi-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+}
+
+.kpi-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #212529;
+    margin-top: 4px;
+}
+
+/* Analysis & Content Cards */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.card-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #edf2f7;
+    font-weight: 600;
+    padding: 1rem 1.25rem;
+}
+
+/* Charts */
+.chart-container {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.chart-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid #f0f0f0;
+}
+
+/* Tables */
+.table thead th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    font-size: 0.92rem;
+}
+
+/* Badges */
+.badge-cereal { background-color: #cfe2ff; color: #084298; }
+.badge-cash { background-color: #d1e7dd; color: #0f5132; }
+.badge-pulse { background-color: #fff3cd; color: #664d03; }
+.badge-oilseed { background-color: #f8d7da; color: #842029; }
+
+/* Filter Bar */
+.filter-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    margin-bottom: 1.5rem;
+}
+
+/* Upload zone */
+.upload-dropzone {
+    border: 2px dashed #198754;
+    border-radius: 12px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    background-color: #f8fff9;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.upload-dropzone:hover {
+    background-color: #eefbf1;
+}
+
+/* Footer */
+footer {
+    background-color: #ffffff;
+    border-top: 1px solid #e9ecef;
+    padding: 1.5rem 0;
+    font-size: 0.88rem;
+    color: #6c757d;
+}
